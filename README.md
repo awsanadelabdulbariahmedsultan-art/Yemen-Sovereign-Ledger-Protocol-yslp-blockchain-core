@@ -8,7 +8,7 @@
 * **بلد المنشأ / Country:** Yemen (الجمهورية اليمنية)
 * **وسائل الاتصال / Contact Phone:** +967 777852433 / +967 776633003
 * **البريد الإلكتروني / Email:** awsandew@outlook.com
-* **لينكد إن / LinkedIn:** [Eng. Awsan Adel](https://linkedin.com)
+* **لينكد إن / LinkedIn:** [Eng. Awsan Adel Abdulbari Ahmed Sultan](https://linkedin.com)
 
 > **⚠️ LEGAL NOTICE:** Copyright (c) 2026 Eng. Awsan Adel Abdulbari Ahmed Sultan. All Rights Reserved. Unauthorized copying, distribution, or deployment of this protocol without explicit written permission from the owner is strictly prohibited.
 
