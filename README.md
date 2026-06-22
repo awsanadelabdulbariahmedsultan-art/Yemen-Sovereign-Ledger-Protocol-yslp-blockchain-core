@@ -42,7 +42,7 @@ At its core runs the **Yemen Sovereign Ledger Protocol (YSLP)** built from scrat
 
 ## 📂 هيكلية مجلدات النظام / Project Directory Structure
 ```text
-CBOYD-Project/
+Yemen-Sovereign-Ledger-Protocol-yslp-blockchain-core/
 ├── core/
 │   └── main.go           # The entire unified YSLP Blockchain Core Engine (Go)
 ├── api-gateway/          # Wallet API Connectors & Microservices
