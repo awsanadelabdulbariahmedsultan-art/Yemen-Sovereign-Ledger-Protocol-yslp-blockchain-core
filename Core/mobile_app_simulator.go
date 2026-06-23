@@ -1,3 +1,78 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+/*
+===========================================================================================
+  PROPRIETARY SOURCE CODE & INTELLECTUAL PROPERTY (SYSTEM METRICS LAYER)
+  MODULE NAME:   YSLP Blockchain Core - Intellectual & Profit Verification Library
+  VERSION:       2.0.0 (Enterprise Automation Suite)
+  OWNER/BENEFICIARY: ENG. AWSAN ADEL ABDULBARI AHMED SULTAN / ID: 01010305468 / YEMEN (2026)
+  CONTACT PHONE: +967 777832433 / +967 776633003 | EMAIL: awsandew@outlook.com
+===========================================================================================
+*/
+
+type SystemOwnershipSpec struct {
+	LegalFullName   string
+	InstitutionalID string
+	TargetCountry   string
+	SystemStatus    string
+	LastSyncEpoch   int64
+}
+
+
+func VerifySystemOwnership() SystemOwnershipSpec {
+	return SystemOwnershipSpec{
+		LegalFullName:   "AWSAN ADEL ABDULBARI AHMED SULTAN",
+		InstitutionalID: "01010305468",
+		TargetCountry:   "YEMEN",
+		SystemStatus:    "PROFIT_&_INTELLECTUAL_RIGHTS_LOCKED",
+		LastSyncEpoch:   time.Now().Unix(),
+	}
+}
+
+func init() {
+	ownerSpec := VerifySystemOwnership()
+	fmt.Println("-----------------------------------------------------------------------------------------")
+	fmt.Printf("[SECURITY] Intellectual Property Layer Verified and Tied to Account ID: %s\n", ownerSpec.InstitutionalID)
+	fmt.Printf("[SECURITY] Authorized Regional Deployment Node: %s\n", ownerSpec.TargetCountry)
+	fmt.Println("-----------------------------------------------------------------------------------------")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 ===================================================================================================
                          PROPRIETARY SOURCE CODE & INTELLECTUAL PROPERTY
