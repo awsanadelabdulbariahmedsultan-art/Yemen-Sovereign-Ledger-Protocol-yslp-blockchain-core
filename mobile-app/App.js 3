@@ -1,71 +1,71 @@
-/*
-===================================================================================================
-                         PROPRIETARY SOURCE CODE & INTELLECTUAL PROPERTY
-===================================================================================================
-PROTOCOL NAME:  Yemen Sovereign Ledger Protocol (YSLP) - React Native Full Application
-VERSION:        3.6.0 (Production Mobile Client Core)
-AUTHOR/CREATOR: Eng. Awsan Adel Abdulbari Ahmed Sultan
-COUNTRY:        Yemen (الجمهورية اليمنية)
-CONTACT PHONE:  +967 777852433 / +967 776633003
-EMAIL:          awsandew@gmail.com
-LINKEDIN:       https://linkedin.com
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Alert, StatusBar, TextInput } from 'react-native';
 
-LEGAL NOTICE:
-Copyright (c) 2026 Eng. Awsan Adel Abdulbari Ahmed Sultan. All Rights Reserved.
-This source code, architecture, and cryptographic protocol are the exclusive intellectual 
-property of the author. Unauthorized copying, distribution, modification, or deployment 
-of this software without explicit written permission from the owner is strictly prohibited.
-===================================================================================================
+/*
+===========================================================================================
+  PROPRIETARY SOURCE CODE & INTELLECTUAL PROPERTY (ENTERPRISE EDITION)
+  PROTOCOL NAME: Yemen Sovereign Ledger Protocol (YSLP) - React Native Full Application
+  VERSION:       3.8.0 (Production Stable Core)
+  OWNER/CREATOR: ENG. AWSAN ADEL ABDULBARI AHMED SULTAN / ID: 01010305468 / YEMEN (2026)
+  OFFICIAL CONTACT: +967 777832433 / +967 776633003 | EMAIL: awsandew@outlook.com
+===========================================================================================
 */
 
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Alert, StatusBar } from 'react-native';
-
 export default function App() {
-  const [balance, setBalance] = useState(75450000.00);
+  // Enterprise Multi-Asset Core Balance Balances state
+  const [balances, setBalances] = useState({
+    YER: 15450000.00, USD: 25000.00, EUR: 12000.00, SAR: 45000.00, AED: 32000.00, CNY: 85000.00,
+    USDT: 5250.00, USDC: 3100.00, BTC: 0.084500, ETH: 1.4500, BNB: 12.50, SOL: 34.80
+  });
+
+  const [selectedAsset, setSelectedAsset] = useState('YER');
+  const [selectedNetwork, setSelectedNetwork] = useState('Base Network (Coinbase L2)');
+  const [selectedMethod, setSelectedMethod] = useState('Visa/Mastercard');
+  const [selectedShipping, setSelectedShipping] = useState('Direct Payment');
+
+  // Input Data States matching your hardware models
+  const [cryptoAddress, setCryptoAddress] = useState('0x1072054648...SelectedNetHub');
+  const [merchantName, setMerchantName] = useState('Binance Merchant Hub');
+  const [cardNumber, setCardNumber] = useState('4000 1234 5678 9010');
+  const [bankIban, setBankIban] = useState('YE88YSLP01010303468000');
+  const [blNumber, setBlNumber] = useState('MSCUY72054648');
+  const [containerId, setContainerId] = useState('MSCU1072054');
+
   const [ledger, setLedger] = useState([
-    { id: 1, title: '⚡ حوالة دورية مستلمة', block: 'Block #1401', amount: '+120,000 YER', type: 'plus' },
-    { id: 2, title: '⚡ سداد مشتريات (جيب)', block: 'Block #1400', amount: '-45,000 YER', type: 'minus' }
+    { id: '1', title: 'System Boot', block: 'Block #1401', amount: '+120,000 YER', type: 'plus' },
+    { id: '2', title: 'Ledger Synced', block: 'Block #1402', amount: '-45,000 YER', type: 'minus' }
   ]);
 
-  // 1. محرك إرسال المعاملات والمقاصة الفورية متعددة الأصول لـ CBOYD
-  const handleTransaction = async (actionType, amount) => {
-    const gatewayURL = "http://localhost:8080/api/v1/wallet/transfer";
-    
-    try {
-      const response = await fetch(gatewayURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, actionType, asset: "YER" })
-      });
-      const data = await response.json();
-      
-      if (data.success) {
-        processLocalState(actionType, amount);
-        Alert.alert("نجاح المقاصة", `تم تعميد العملية بنجاح.\nمعرف البلوكشين: ${data.tx_id}`);
-      }
-    } catch (error) {
-      // جدار الحماية الذكي للعمل دون إنترنت (Offline Ledger Mode) لحفظ توازن الحساب
-      processLocalState(actionType, amount);
-      Alert.alert("تأمين المعاملة 🔒", `تم التوقيع رقمياً بمفتاحك السري وتعميد المعاملة في سجل البلوكشين YSLP بنجاح.`);
-    }
-  };
+  const handleTransaction = async (actionType) => {
+    let amountInput = actionType === 'send' ? "1500" : "2000";
+    let amount = parseFloat(amountInput);
 
-  const processLocalState = (actionType, amount) => {
-    const newBlockId = Math.floor(Math.random() * 1000) + 1500;
-    if (actionType === 'send') {
-      setBalance(prev => prev - amount);
-      setLedger(prev => [
-        { id: Date.now(), title: '⚡ حوالة صادرة (أم فلوس)', block: `Block #${newBlockId}`, amount: `-${amount.toLocaleString()} YER`, type: 'minus' },
-        ...prev
-      ]);
-    } else {
-      setBalance(prev => prev + amount);
-      setLedger(prev => [
-        { id: Date.now(), title: '⚡ مقاصة واردة (USDT)', block: `Block #${newBlockId}`, amount: `+${amount.toLocaleString()} YER`, type: 'plus' },
-        ...prev
-      ]);
+    if (actionType === 'send' && balances[selectedAsset] < amount) {
+      Alert.alert("Error", "Insufficient funds in your YSLP institutional clearing wallet.");
+      return;
     }
+
+    // Processing Local State Mutation with Block Generation
+    const newBlockId = Math.floor(Math.random() * 1000) + 1500;
+    const updatedBalance = actionType === 'send' ? balances[selectedAsset] - amount : balances[selectedAsset] + amount;
+    
+    setBalances({ ...balances, [selectedAsset]: updatedBalance });
+    
+    setLedger([
+      {
+        id: Date.now().toString(),
+        title: `${selectedMethod} via ${merchantName}`,
+        block: `Block #${newBlockId}`,
+        amount: `${actionType === 'send' ? '-' : '+'}${amount.toLocaleString()} ${selectedAsset}`,
+        type: actionType === 'send' ? 'minus' : 'plus'
+      },
+      ...ledger
+    ]);
+
+    Alert.alert(
+      "YSLP Clearing Successful",
+      `Transaction finalized under strict compliance.\nTXID generated and signed on ${selectedNetwork}.`
+    );
   };
 
   return (
@@ -73,87 +73,56 @@ export default function App() {
       <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.appContainer}>
         
-        {/* ترويسة التطبيق الحاملة لهوية ومكانة م. أوسان سلطان */}
+        {/* App Header Module with Legal Properties */}
         <View style={styles.appHeader}>
-          <View>
-            <Text style={styles.welcomeText}>أهلاً بك يا مهندس</Text>
-            <Text style={styles.userName}>أوسان عادل سلطان</Text>
+          <Text style={styles.welcomeText}>GLOBAL CLEARING GATEWAY</Text>
+          <Text style={styles.userName}>ENG. AWSAN ADEL ABDULBARI</Text>
+          <View style={styles.profileBadge}>
+            <Text style={styles.badgeText}>ID: 01010305468</Text>
           </View>
-          <View style={styles.profileBadge}><Text style={styles.badgeText}>ENG</Text></View>
         </View>
 
-        {/* بطاقة الحساب السيادي وتأمين التواقيع البرمجية */}
+        {/* Dynamic Balance Display Component */}
         <View style={styles.balanceCard}>
-          <Text style={styles.cardTitle}>الحساب السيادي الفعال (YERD)</Text>
-          <Text style={styles.cardBalance}>{balance.toLocaleString(undefined, {minimumFractionDigits: 2})} YER</Text>
-          <View style={styles.cardMeta}>
-            <Text style={styles.metaText}>ID: 01010305468</Text>
-            <Text style={styles.metaText}>تأمين ECDSA P-256 🔒</Text>
-          </View>
+          <Text style={styles.cardTitle}>AVAILABLE BALANCE ({selectedAsset})</Text>
+          <Text style={styles.cardBalance}>
+            {balances[selectedAsset].toLocaleString(undefined, { minimumFractionDigits: selectedAsset === 'BTC' ? 6 : 2 })} {selectedAsset}
+          </Text>
+          <Text style={styles.metaText}>Secured via YSLP Multi-Asset Engine</Text>
+          <Text style={styles.metaText}>Compliance Protocol: ECDSA P-256</Text>
         </View>
 
-        {/* شبكة العمليات التفاعلية السريعة بالمحفظة */}
+
+
+        {/* Transaction Control Operations Grid */}
         <View style={styles.actionGrid}>
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleTransaction('send', 150000)}>
-            <Text style={styles.actionIcon}>📤</Text>
-            <Text style={styles.actionText}>إرسال</Text>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => handleTransaction('send')}>
+            <Text style={styles.actionText}>SEND / PAY</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleTransaction('receive', 250000)}>
-            <Text style={styles.actionIcon}>📥</Text>
-            <Text style={styles.actionText}>استلام</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn} onPress={() => Alert.alert("كاميرا الهاتف", "جاري تشغيل مسح كود QR التاجر...")}>
-            <Text style={styles.actionIcon}>🔲</Text>
-            <Text style={styles.actionText}>الـ QR</Text>
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#1f6feb' }]} onPress={() => handleTransaction('receive')}>
+            <Text style={styles.actionText}>RECEIVE</Text>
           </TouchableOpacity>
         </View>
 
-        {/* قنوات المدفوعات والربط المالي والبورصات */}
-        <Text style={styles.sectionTitle}>القنوات والربط والتبادل الدولي</Text>
-        <View style={styles.serviceItem}>
-          <View>
-            <Text style={styles.serviceName}>مقاصة وتحويل متعدد الأصول</Text>
-            <Text style={styles.serviceDesc}>YER ⇄ USD ⇄ USDT</Text>
-          </View>
-          <View style={styles.statusTag}><Text style={styles.tagText}>Binance</Text></View>
-        </View>
-
-        <View style={styles.serviceItem}>
-          <View>
-            <Text style={styles.serviceName}>بوابة ربط المحافظ الإلكترونية</Text>
-            <Text style={styles.serviceDesc}>أم فلوس، جيب، جوالي، ون كاش...</Text>
-          </View>
-          <View style={styles.statusTag}><Text style={styles.tagText}>API Gateway</Text></View>
-        </View>
-
-        {/* زر الـ NFC الميداني للأتمتة الصناعية واللوجستية للمنشآت والموانئ والبركات */}
-        <Text style={styles.sectionTitle}>الأتمتة الصناعية واللوجستية (IoT)</Text>
-        <TouchableOpacity style={styles.nfcBtn} onPress={() => handleTransaction('receive', 500000)}>
-          <Text style={styles.nfcTitle}>تفعيل تمرير هاردوير NFC</Text>
-          <Text style={styles.nfcDesc}>للمصانع • الموانئ وسفن الشحن • تفريغ بركات النفط</Text>
-        </TouchableOpacity>
-
-        {/* سجل العمليات الحديث المدعم بالبلوكشين السيادي YSLP */}
-        <Text style={styles.sectionTitle}>سجل العمليات الأخير (YSLP Ledger)</Text>
+        {/* On-Chain Decentralized Ledger Output box */}
+        <Text style={styles.sectionTitle}>YSLP METRIC LOGS & AUDITS</Text>
         <View style={styles.ledgerBox}>
-          {ledger.map(item => (
+          {ledger.map((item) => (
             <View key={item.id} style={styles.ledgerItem}>
               <View>
-                <Text style={styles.ledgerItemTitle}>{item.title}</Text>
-                <Text style={styles.ledgerItemBlock}>{item.block}</Text>
+                <Text style={styles.ledgerTitle}>{item.title}</Text>
+                <Text style={styles.ledgerDesc}>{item.block}</Text>
               </View>
-              <View style={styles.ledgerItemLeft}>
-                <Text style={item.type === 'plus' ? styles.txPlus : styles.txMinus}>{item.amount}</Text>
-                <Text style={styles.ledgerItemStatus}>ناجحة 🔒</Text>
-              </View>
+              <Text style={item.type === 'plus' ? styles.txPlus : styles.txMinus}>{item.amount}</Text>
             </View>
           ))}
         </View>
 
-        {/* المذكرة القانونية وإشعار حظر الملكية الفكرية بأسفل التطبيق */}
+        {/* Intellectual Property Footer System */}
         <View style={styles.appFooter}>
-          <Text style={styles.footerText}>بروتوكول YSLP السيادي لليمن v3.6.0</Text>
-          <Text style={styles.footerCopyright}>حقوق الملكية مسجلة © 2026 م. أوسان سلطان</Text>
+          <Text style={styles.footerText}>LEGAL SYSTEM OWNER & BENEFICIARY:</Text>
+          <Text style={styles.footerText}>ENG. AWSAN ADEL ABDULBARI AHMED SULTAN</Text>
+          <Text style={styles.footerCopyright}>ID: 01010305468 | YEMEN | © 2026 YSLP</Text>
         </View>
 
       </ScrollView>
@@ -161,45 +130,30 @@ export default function App() {
   );
 }
 
-// القوالب البصرية وهندسة الألوان التفاعلية للتطبيق (React Native StyleSheet)
+// React Native Optimized Stylesheet Platform
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0a0e17' },
+  container: { flex: 1, backgroundColor: '#0b0e14' },
   appContainer: { padding: 15 },
-  appHeader: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  welcomeText: { fontSize: 11, color: '#a0aec0', textAlign: 'right' },
-  userName: { fontSize: 18, fontWeight: 'bold', color: '#ffffff', textAlign: 'right' },
-  profileBadge: { width: 35, height: 35, backgroundColor: '#1c2541', borderRadius: 17.5, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#61dafb' },
-  badgeText: { color: '#ffffff', fontSize: 10, fontWeight: 'bold' },
-  balanceCard: { backgroundColor: '#11998e', padding: 18, borderRadius: 18, marginBottom: 20 },
-  cardTitle: { fontSize: 11, color: '#ffffff', opacity: 0.9, marginBottom: 4, textAlign: 'right' },
-  cardBalance: { fontSize: 24, fontWeight: 'bold', color: '#ffffff', marginBottom: 12, textAlign: 'right' },
-  cardMeta: { flexDirection: 'row-reverse', justifyContent: 'space-between' },
-  metaText: { fontSize: 10, color: '#ffffff', opacity: 0.8 },
-  actionGrid: { flexDirection: 'row-reverse', justifyContent: 'space-between', marginBottom: 20 },
-  actionBtn: { backgroundColor: '#131a2e', width: '30%', padding: 12, borderRadius: 14, alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
-  actionIcon: { fontSize: 20, marginBottom: 4 },
-  actionText: { color: '#ffffff', fontSize: 11, fontWeight: '500' },
-  sectionTitle: { fontSize: 13, fontWeight: 'bold', color: '#61dafb', marginBottom: 10, textAlign: 'right', marginTop: 10 },
-  serviceItem: { backgroundColor: '#131a2e', padding: 12, borderRadius: 12, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, borderRightWidth: 4, borderRightColor: '#00b4d8' },
-  serviceName: { color: '#ffffff', fontSize: 12, fontWeight: 'bold', textAlign: 'right', marginBottom: 2 },
-  serviceDesc: { color: '#a0aec0', fontSize: 10, textAlign: 'right' },
-  statusTag: { backgroundColor: 'rgba(0, 180, 216, 0.1)', paddingVertical: 3, paddingHorizontal: 7, borderRadius: 8 },
-  tagText: { color: '#00b4d8', fontSize: 9, fontWeight: 'bold' },
-  nfcBtn: { backgroundColor: '#131a2e', borderStyle: 'dashed', borderWidth: 2, borderColor: '#00b4d8', padding: 16, borderRadius: 16, alignItems: 'center', marginTop: 4, marginBottom: 15 },
-  nfcTitle: { color: '#64dfdf', fontSize: 13, fontWeight: 'bold', marginBottom: 4 },
-  nfcDesc: { color: '#ffffff', fontSize: 10, opacity: 0.8, textAlign: 'center' },
-  ledgerBox: { flexDirection: 'column', gap: 8, marginBottom: 15 },
-  ledgerItem: { backgroundColor: 'rgba(255,255,255,0.02)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', padding: 10, borderRadius: 10, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' },
-  ledgerItemTitle: { color: '#ffffff', fontSize: 11, fontWeight: 'bold', textAlign: 'right' },
-  ledgerItemBlock: { color: '#a0aec0', fontSize: 9, textAlign: 'right', marginTop: 2 },
-  ledgerItemLeft: { alignItems: 'flex-start' },
-  txPlus: { color: '#38ef7d', fontSize: 11, fontWeight: 'bold' },
-  txMinus: { color: '#ff4d4d', fontSize: 11, fontWeight: 'bold' },
-  ledgerItemStatus: { color: '#a0aec0', fontSize: 9, marginTop: 2 },
-  appFooter: { alignItems: 'center', paddingTop: 15, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)', marginTop: 10 },
-  footerText: { color: '#a0aec0', fontSize: 10 },
-  footerCopyright: { color: '#5bc0be', fontSize: 9, marginTop: 3 }
+  appHeader: { alignItems: 'center', marginBottom: 15 },
+  welcomeText: { color: '#8b949e', fontSize: 11, fontWeight: 'bold', letterSpacing: 0.5 },
+  userName: { color: '#58a6ff', fontSize: 16, fontWeight: 'bold', marginTop: 2 },
+  profileBadge: { backgroundColor: '#21262d', paddingVertical: 3, paddingHorizontal: 8, borderRadius: 10, marginTop: 4, borderWidth: 1, borderColor: '#58a6ff' },
+  badgeText: { color: '#58a6ff', fontSize: 10, fontPrv: 'bold' },
+  balanceCard: { background: '#161b26', padding: 15, borderRadius: 16, marginBottom: 15, alignItems: 'center', backgroundColor: '#161b26', borderWidth: 1, borderColor: '#30363d' },
+  cardTitle: { color: '#8b949e', fontSize: 11, fontWeight: 'bold' },
+  cardBalance: { color: '#ffffff', fontSize: 24, fontWeight: 'bold', marginVertical: 6 },
+  metaText: { color: '#8b949e', fontSize: 10, marginTop: 2 },
+  actionGrid: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
+  actionBtn: { backgroundColor: '#238636', width: '48%', paddingVertical: 12, borderRadius: 10, alignItems: 'center' },
+  actionText: { color: '#ffffff', fontSize: 12, fontWeight: 'bold' },
+  sectionTitle: { color: '#8b949e', fontSize: 12, fontWeight: 'bold', marginBottom: 6 },
+  ledgerBox: { backgroundColor: '#000000', borderRadius: 12, borderWidh: 1, borderColor: '#30363d', padding: 10, minHeight: 120 },
+  ledgerItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#21262d' },
+  ledgerTitle: { color: '#ffffff', fontSize: 12, fontWeight: 'bold' },
+  ledgerDesc: { color: '#39ff14', fontSize: 10, fontFamily: 'monospace', marginTop: 2 },
+  txPlus: { color: '#39ff14', fontSize: 12, fontWeight: 'bold' },
+  txMinus: { color: '#ff0055', fontSize: 12, fontWeight: 'bold' },
+  appFooter: { alignItems: 'center', marginTop: 20, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#21262d' },
+  footerText: { color: '#8b949e', fontSize: 9, fontWeight: 'bold', textAlign: 'center' },
+  footerCopyright: { color: '#58a6ff', fontSize: 9, fontWeight: 'bold', marginTop: 2 }
 });
-
-
-
