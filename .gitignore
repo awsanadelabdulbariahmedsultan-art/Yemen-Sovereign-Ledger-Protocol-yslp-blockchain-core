@@ -1,32 +1,36 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# ---------------------------------------------------------------------
+# YSLP MULTI-CHAIN HUB - ENTERPRISE .GITIGNORE PARADIGM
+# AUTHOR & OWNER: ENG. AWSAN ADEL ABDULBARI AHMED SULTAN
+# ID: 01010305468 | COUNTRY: YEMEN (2026)
+# ---------------------------------------------------------------------
+# Mode: Recommended Professional Go AllowListing Template
 
-# Test binary, built with `go test -c`
-*.test
+# 1. Ignore absolutely everything by default to prevent smartphone junk logs
+*
 
-# Code coverage profiles and other test artifacts
-*.out
-coverage.*
-*.coverprofile
-profile.cov
+# 2. Hard-Allowlist essential project files and configuration source codes
+!/.gitignore
+!*.go
+!*.js
+!go.sum
+!go.mod
+!package.json
+!package-lock.json
+!README.md
+!LICENSE
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# 3. Allowlist institutional multi-chain directory structures
+!/blockchain-core/
+!/api-gateway/
+!/mobile-app/
+!/assets/
 
-# Go workspace file
-go.work
-go.work.sum
+# 4. Recursively allow subdirectories tracking for core scripts
+!*/
 
-# env file
+# 5. Explicitly block sensitive development environment variables
 .env
-
-# Editor/IDE
-# .idea/
-# .vscode/
+.env.*
+node_modules/
+*.exe
+*.test
